@@ -9,12 +9,12 @@ const DEVICE_ENVIRONMENT_SENSOR_TYPE = "environmentSensor"
 
 type EnvironmentSensorAttributes struct {
 	BaseAttributes
-	Temperature     int `json:"currentTemperature"`
-	Humidity        int `json:"currentRH"`
-	PM25            int `json:"currentPM25"`
-	MaxMeasuredPM25 int `json:"maxMeasuredPM25"`
-	MinMeasuredPM25 int `json:"minMeasuredPM25"`
-	VocIndex        int `json:"vocIndex"`
+	Temperature     float64 `json:"currentTemperature"`
+	Humidity        int     `json:"currentRH"`
+	PM25            int     `json:"currentPM25"`
+	MaxMeasuredPM25 int     `json:"maxMeasuredPM25"`
+	MinMeasuredPM25 int     `json:"minMeasuredPM25"`
+	VocIndex        int     `json:"vocIndex"`
 }
 
 func (a *EnvironmentSensorAttributes) CollectMetrics(device Device) {

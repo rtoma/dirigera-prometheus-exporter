@@ -1,9 +1,11 @@
 package collector
 
 import (
+	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"time"
@@ -63,7 +65,9 @@ func (c *MetricsCollector) CollectOnce() error {
 	defer resp.Body.Close()
 
 	var deviceList []devices.Device
-	if err := json.NewDecoder(resp.Body).Decode(&deviceList); err != nil {
+	var buf bytes.Buffer
+	if err := json.NewDecoder(io.TeeReader(resp.Body, &buf)).Decode(&deviceList); err != nil {
+		log.Printf("Received unexpected response from /v1/devices request: data=%s", buf.String())
 		counterDirigeraScrapeFailures.WithLabelValues("decode-response").Inc()
 		return fmt.Errorf("error decoding response: %v", err)
 	}
