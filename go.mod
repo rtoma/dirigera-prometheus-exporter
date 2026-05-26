@@ -4,7 +4,7 @@ go 1.25.3
 
 require (
 	github.com/gorilla/websocket v1.5.3
-	github.com/tidwall/gjson v1.18.0
+	github.com/tidwall/gjson v1.19.0
 )
 
 require (
