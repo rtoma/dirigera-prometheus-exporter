@@ -130,8 +130,17 @@ func (c *MetricsCollector) CollectOnce() error {
 			}
 			sensor.CollectMetrics(device)
 
+		case devices.DEVICE_ELECTRICAL_SENSOR_TYPE:
+			var electricalSensor devices.ElectricalSensorAttributes
+			if err := json.Unmarshal(device.Attributes, &electricalSensor); err != nil {
+				return fmt.Errorf("error unmarshalling ElectricalAttributes: %v", err)
+			}
+			electricalSensor.CollectMetrics(device)
+
 		default:
-			device.CollectMetrics("")
+			var attributes devices.BaseAttributes
+			_ = json.Unmarshal(device.Attributes, &attributes)
+			device.CollectMetrics(attributes.CustomName)
 			// log.Printf("Unknown device, type=%s, deviceType=%s, id=%s, lastSeen=%s, reachable=%v, attributes=%s",
 			// 	device.Type, device.DeviceType, device.ID, device.LastSeen, device.IsReachable, device.Attributes)
 			log.Printf("Unknown device: %+v", device)
