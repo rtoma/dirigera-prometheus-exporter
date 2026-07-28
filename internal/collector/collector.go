@@ -133,7 +133,7 @@ func (c *MetricsCollector) CollectOnce() error {
 		case devices.DEVICE_ELECTRICAL_SENSOR_TYPE:
 			var electricalSensor devices.ElectricalSensorAttributes
 			if err := json.Unmarshal(device.Attributes, &electricalSensor); err != nil {
-				return fmt.Errorf("error unmarshalling ElectricalAttributes: %v", err)
+				return fmt.Errorf("error unmarshalling ElectricalSensorAttributes: %v", err)
 			}
 			electricalSensor.CollectMetrics(device)
 

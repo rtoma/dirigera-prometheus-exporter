@@ -51,10 +51,10 @@ func (a *ElectricalAttributes) collectElectricalMetrics(deviceID, deviceName str
 		gaugeElectricalEnergyAtResetKilowattHours.WithLabelValues(labels...).Set(*a.EnergyConsumedAtLastReset)
 	}
 	if a.TimeOfLastEnergyReset != nil {
-		gaugeElectricalEnergyResetTimestamp.WithLabelValues(labels...).Set(float64(a.TimeOfLastEnergyReset.Unix()))
+		gaugeElectricalEnergyResetTimestamp.WithLabelValues(labels...).Set(float64(fixTimezone(*a.TimeOfLastEnergyReset).Unix()))
 	}
 	if a.TotalEnergyConsumedUpdated != nil {
-		gaugeElectricalEnergyUpdatedTimestamp.WithLabelValues(labels...).Set(float64(a.TotalEnergyConsumedUpdated.Unix()))
+		gaugeElectricalEnergyUpdatedTimestamp.WithLabelValues(labels...).Set(float64(fixTimezone(*a.TotalEnergyConsumedUpdated).Unix()))
 	}
 }
 
