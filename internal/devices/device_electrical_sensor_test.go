@@ -3,6 +3,7 @@ package devices
 import (
 	"encoding/json"
 	"testing"
+	"time"
 
 	"github.com/prometheus/client_golang/prometheus/testutil"
 )
@@ -74,6 +75,9 @@ func TestElectricalAttributes_collectElectricalMetrics(t *testing.T) {
 			TotalEnergyConsumed: floatPtr(777.7),
 		}
 
+		resetTime := time.Date(2026, 1, 1, 12, 0, 0, 0, time.UTC)
+		attrs.TimeOfLastEnergyReset = &resetTime
+
 		deviceName := "electrical-collect-present"
 		attrs.collectElectricalMetrics(deviceName)
 
@@ -85,6 +89,11 @@ func TestElectricalAttributes_collectElectricalMetrics(t *testing.T) {
 		}
 		if got := testutil.ToFloat64(gaugeElectricalEnergyKilowattHours.WithLabelValues(deviceName)); got != 777.7 {
 			t.Errorf("gaugeElectricalEnergyKilowattHours = %v, want 777.7", got)
+		}
+
+		wantResetTimestamp := float64(fixTimezone(resetTime).Unix())
+		if got := testutil.ToFloat64(gaugeElectricalEnergyResetTimestamp.WithLabelValues(deviceName)); got != wantResetTimestamp {
+			t.Errorf("gaugeElectricalEnergyResetTimestamp = %v, want %v", got, wantResetTimestamp)
 		}
 	})
 
