@@ -77,72 +77,82 @@ func (c *MetricsCollector) CollectOnce() error {
 		case devices.DEVICE_AIR_PURIFIER_TYPE:
 			var airPurifier devices.AirPurifierAttributes
 			if err := json.Unmarshal(device.Attributes, &airPurifier); err != nil {
-				return fmt.Errorf("error unmarshalling AirPurifierAttributes: %v", err)
+				log.Printf("error unmarshalling AirPurifierAttributes for device %s: %v", device.ID, err)
+				continue
 			}
 			airPurifier.CollectMetrics(device)
 
 		case devices.DEVICE_ENVIRONMENT_SENSOR_TYPE:
 			var envSensor devices.EnvironmentSensorAttributes
 			if err := json.Unmarshal(device.Attributes, &envSensor); err != nil {
-				return fmt.Errorf("error unmarshalling EnvironmentSensorAttributes: %v", err)
+				log.Printf("error unmarshalling EnvironmentSensorAttributes for device %s: %v", device.ID, err)
+				continue
 			}
 			envSensor.CollectMetrics(device)
 
 		case devices.DEVICE_GATEWAY_TYPE:
 			var gw devices.GatewayAttributes
 			if err := json.Unmarshal(device.Attributes, &gw); err != nil {
-				return fmt.Errorf("error unmarshalling GatewayAttributes: %v", err)
+				log.Printf("error unmarshalling GatewayAttributes for device %s: %v", device.ID, err)
+				continue
 			}
 			gw.CollectMetrics(device)
 
 		case devices.DEVICE_OUTLET_TYPE:
 			var outlet devices.OutletAttributes
 			if err := json.Unmarshal(device.Attributes, &outlet); err != nil {
-				return fmt.Errorf("error unmarshalling OutletAttributes: %v", err)
+				log.Printf("error unmarshalling OutletAttributes for device %s: %v", device.ID, err)
+				continue
 			}
 			outlet.CollectMetrics(device)
 
 		case devices.DEVICE_SPEAKER_TYPE:
 			var speaker devices.SpeakerAttributes
 			if err := json.Unmarshal(device.Attributes, &speaker); err != nil {
-				return fmt.Errorf("error unmarshalling SpeakerAttributes: %v", err)
+				log.Printf("error unmarshalling SpeakerAttributes for device %s: %v", device.ID, err)
+				continue
 			}
 			speaker.CollectMetrics(device)
 
 		case devices.DEVICE_LIGHT_TYPE:
 			var light devices.LightAttributes
 			if err := json.Unmarshal(device.Attributes, &light); err != nil {
-				return fmt.Errorf("error unmarshalling LightAttributes: %v", err)
+				log.Printf("error unmarshalling LightAttributes for device %s: %v", device.ID, err)
+				continue
 			}
 			light.CollectMetrics(device)
 
 		case devices.DEVICE_LIGHT_CONTROLLER_TYPE:
 			var controller devices.LightControllerAttributes
 			if err := json.Unmarshal(device.Attributes, &controller); err != nil {
-				return fmt.Errorf("error unmarshalling LightControllerAttributes: %v", err)
+				log.Printf("error unmarshalling LightControllerAttributes for device %s: %v", device.ID, err)
+				continue
 			}
 			controller.CollectMetrics(device)
 
 		case devices.DEVICE_WATER_SENSOR_TYPE:
 			var sensor devices.WaterSensorAttributes
 			if err := json.Unmarshal(device.Attributes, &sensor); err != nil {
-				return fmt.Errorf("error unmarshalling WaterSensorAttributes: %v", err)
+				log.Printf("error unmarshalling WaterSensorAttributes for device %s: %v", device.ID, err)
+				continue
 			}
 			sensor.CollectMetrics(device)
 
 		case devices.DEVICE_ELECTRICAL_SENSOR_TYPE:
 			var electricalSensor devices.ElectricalSensorAttributes
 			if err := json.Unmarshal(device.Attributes, &electricalSensor); err != nil {
-				return fmt.Errorf("error unmarshalling ElectricalSensorAttributes: %v", err)
+				log.Printf("error unmarshalling ElectricalSensorAttributes for device %s: %v", device.ID, err)
+				continue
 			}
 			electricalSensor.CollectMetrics(device)
 
 		default:
 			var attributes devices.BaseAttributes
-			_ = json.Unmarshal(device.Attributes, &attributes)
+			if err := json.Unmarshal(device.Attributes, &attributes); err != nil {
+				log.Printf("error unmarshalling BaseAttributes for device %s: %v", device.ID, err)
+				continue
+			}
 			device.CollectMetrics(attributes.CustomName)
-			// log.Printf("Unknown device, type=%s, deviceType=%s, id=%s, lastSeen=%s, reachable=%v, attributes=%s",
-			// 	device.Type, device.DeviceType, device.ID, device.LastSeen, device.IsReachable, device.Attributes)
 			log.Printf("Unknown device: %+v", device)
 		}
 	}

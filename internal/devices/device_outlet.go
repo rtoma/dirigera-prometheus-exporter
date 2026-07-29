@@ -22,7 +22,7 @@ func (o *OutletAttributes) CollectMetrics(device Device) {
 	o.StatusLightAttribute.CollectMetrics(device, o.CustomName)
 	gaugeOutletIsOn.WithLabelValues(o.CustomName).Set(boolToFloat64(o.IsOn))
 	gaugeOutletLightLevel.WithLabelValues(o.CustomName).Set(float64(o.LightLevel))
-	o.collectElectricalMetrics(device.ID, o.CustomName)
+	o.collectElectricalMetrics(o.CustomName)
 }
 
 var (

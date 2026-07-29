@@ -27,11 +27,11 @@ type ElectricalSensorAttributes struct {
 
 func (a *ElectricalSensorAttributes) CollectMetrics(device Device) {
 	device.CollectMetrics(a.CustomName)
-	a.collectElectricalMetrics(device.ID, a.CustomName)
+	a.collectElectricalMetrics(a.CustomName)
 }
 
-func (a *ElectricalAttributes) collectElectricalMetrics(deviceID, deviceName string) {
-	labels := []string{deviceID, deviceName}
+func (a *ElectricalAttributes) collectElectricalMetrics(deviceName string) {
+	labels := []string{deviceName}
 	if a.CurrentActivePower != nil {
 		gaugeElectricalActivePowerWatts.WithLabelValues(labels...).Set(*a.CurrentActivePower)
 	}
@@ -59,12 +59,12 @@ func (a *ElectricalAttributes) collectElectricalMetrics(deviceID, deviceName str
 }
 
 var (
-	gaugeElectricalActivePowerWatts           = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_active_power_watts", Help: "Current active power reported by DIRIGERA"}, []string{"device_id", "device_name"})
-	gaugeElectricalCurrentAmperes             = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_current_amperes", Help: "Current electrical current reported by DIRIGERA"}, []string{"device_id", "device_name"})
-	gaugeElectricalVoltageVolts               = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_voltage_volts", Help: "Current electrical voltage reported by DIRIGERA"}, []string{"device_id", "device_name"})
-	gaugeElectricalFrequencyHertz             = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_frequency_hertz", Help: "Current AC frequency reported by DIRIGERA"}, []string{"device_id", "device_name"})
-	gaugeElectricalEnergyKilowattHours        = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_energy_kilowatt_hours", Help: "Total energy consumed reported by DIRIGERA"}, []string{"device_id", "device_name"})
-	gaugeElectricalEnergyAtResetKilowattHours = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_energy_at_reset_kilowatt_hours", Help: "Energy consumed at the last reset reported by DIRIGERA"}, []string{"device_id", "device_name"})
-	gaugeElectricalEnergyResetTimestamp       = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_energy_reset_timestamp_seconds", Help: "Last energy reset timestamp reported by DIRIGERA"}, []string{"device_id", "device_name"})
-	gaugeElectricalEnergyUpdatedTimestamp     = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_energy_updated_timestamp_seconds", Help: "Last total-energy update timestamp reported by DIRIGERA"}, []string{"device_id", "device_name"})
+	gaugeElectricalActivePowerWatts           = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_active_power_watts", Help: "Current active power reported by DIRIGERA"}, []string{"device_name"})
+	gaugeElectricalCurrentAmperes             = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_current_amperes", Help: "Current electrical current reported by DIRIGERA"}, []string{"device_name"})
+	gaugeElectricalVoltageVolts               = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_voltage_volts", Help: "Current electrical voltage reported by DIRIGERA"}, []string{"device_name"})
+	gaugeElectricalFrequencyHertz             = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_frequency_hertz", Help: "Current AC frequency reported by DIRIGERA"}, []string{"device_name"})
+	gaugeElectricalEnergyKilowattHours        = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_energy_kilowatt_hours", Help: "Cumulative total energy consumed reported by DIRIGERA (monotonically increasing since last reset; not a Prometheus counter)"}, []string{"device_name"})
+	gaugeElectricalEnergyAtResetKilowattHours = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_energy_at_reset_kilowatt_hours", Help: "Cumulative energy consumed at the last reset reported by DIRIGERA"}, []string{"device_name"})
+	gaugeElectricalEnergyResetTimestamp       = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_energy_reset_timestamp_seconds", Help: "Last energy reset timestamp reported by DIRIGERA"}, []string{"device_name"})
+	gaugeElectricalEnergyUpdatedTimestamp     = promauto.NewGaugeVec(prometheus.GaugeOpts{Name: "ikea_dirigera_electrical_energy_updated_timestamp_seconds", Help: "Last total-energy update timestamp reported by DIRIGERA"}, []string{"device_name"})
 )
